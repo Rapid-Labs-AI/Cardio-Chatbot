@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %} Cardio Bot | Home {% endblock title %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary cardio_navbar">
+    <div class="container-fluid px-5">
+      <a class="navbar-brand fs-5" href="#"><span><img src="{% static 'img/icons/vector.png' %}" class="img-fluid pe-2" alt="logo.png"></span><span class="logo-text">Cardio Bot</span></a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Testimonials</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">FAQ</a>
+          </li>
+        </ul>
+        <span class="navbar-text contact-btn-navbar">
+    
+
+            <a class="btn btn-danger text-light btn-sm px-3" href="mailto:info@rapidlabs.ai? subject=Cardio Bot Web">Contact Us</a> 
+        </span>
+      </div>
+    </div>
+</nav>
+
+<div class="main_content">
+    <div class="banner_container mt-5">
+        <div class="row justify-content-around align-items-center">
+            <div class="leftside-img col-lg-4 col-12">
+                <div class="img">
+                    <img src="{% static 'img/Artboard 2 4.png' %}" class="img-fluid artboard-img" alt="cardio.png">
+                </div>
+            </div>
+            <div class="rightside-bg-text col-lg-4 col-12">
+                <div class="bgimg bg-image">
+                    <div class="text-overlay">
+                        <h1 class="text-capitalize text-dark fw-bold">Cardio-AI Chatbot</h1>
+                        <p class="description py-1">Cardio-AI Chatbot is an intelligent application designed to provide users with instant, AI-driven advice and information on cardiovascular health, facilitating early detection and preventive measures for heart-related conditions.</p>
+                        <a href="{% url 'chatbot' %}" class="btn btn-sm btn-danger px-3">Try our Chatbot</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="design-face-container mt-5">
+        <div class="design-img d-flex justify-content-center">
+            <img src="{% static 'img/Main picture.png' %}" class="img-fluid" alt="Cardio Bot UX Design Face.png">
+        </div>
+    </div>
+    <div class="solutions-section-main mt-5">
+        <div class="solution-before-img">
+            <div class="sol-img d-flex justify-content-center">
+                <img src="{% static 'img/Artboard 4 2.png' %}" class="img-fluid" alt="Artboard.png">
+            </div>
+        </div>
+    </div>
+    <div class="our_solutions">
+        <h3 class="text-center fw-bolder text-capitalize">Our Solution for your problems</h3>
+        <p class="figure-caption text-center">We make it easy for users to use our platform, that's why we provide this benefit.</p>
+        <div class="cards_container mt-5 container">
+            <div class="all_cards row justify-content-center align-items-center">
+                <div class="card1 col-lg-3 col-md-6 col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center just-content-start mb-3">
+                                <div class="card_icon">
+                                    <img
+                                        class="img-fluid"
+                                        src="{% static 'img/icons/frame.png' %}"
+                                        alt="Card image cap"
+                                    />
+                                </div>
+                                <div><h5 class="card-title m-0">24/7 Support</h5></div>
+                                
+                            </div>
+                            <p class="card-text fs-6 mb-5">Always there for you, offering emotional support and conversation anytime you need it.</p>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="card2 col-lg-3 col-md-6 col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center just-content-start mb-3">
+                                <div class="card_icon">
+                                    <img
+                                        class="img-fluid"
+                                        src="{% static 'img/icons/Secure.png' %}"
+                                        alt="Card image cap"
+                                    />
+                                </div>
+                                <div><h5 class="card-title m-0">Personalized Insights</h5></div>
+                                
+                            </div>
+                            <p class="card-text fs-6 mb-5">Synced from a Windows, Mac, or Ubuntu Linux computer to the cloud and vice versa without any problems.</p>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="card3 col-lg-3 col-md-6 col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center just-content-start mb-3">
+                                <div class="card_icon">
+                                    <img
+                                        class="img-fluid"
+                                        src="{% static 'img/icons/Protect Cloud.png' %}"
+                                        alt="Card image cap"
+                                    />
+                                </div>
+                                <div><h5 class="card-title m-0">Secure Conversations</h5></div>
+                                
+                            </div>
+                            <p class="card-text fs-6 mb-5">Keep track of your emotional well-being with intuitive mood logs and receive insights to improve your mental health.</p>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="card4 col-lg-3 col-md-6 col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center just-content-start mb-3">
+                                <div class="card_icon">
+                                    <img
+                                        class="img-fluid"
+                                        src="{% static 'img/icons/Group 19.png' %}"
+                                        alt="Card image cap"
+                                    />
+                                </div>
+                                <div><h5 class="card-title m-0">Resource Library</h5></div>
+                                
+                            </div>
+                            <p class="card-text fs-6 mb-5">Access a curated selection of articles, videos, and exercises designed to support your mental health journey.</p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<style>
+    
+</style>
+<footer class="w-100 py-4 flex-shrink-0 footer_main_tag">
+    <div class="container py-4">
+        <div class="row gy-4 gx-5">
+            <div class="col-lg-4 col-md-6">
+                    <span><img src="{% static 'img/icons/vector white.png' %}" alt="logo.png" class="img-fluid me-2"></span><span class="h4 text-light">Mental-cardio Bot</span>
+                    <p class="fs-5 mt-2 text-light">Empowering your health with trusted advice and actionable tips.</p>
+            </div>
+            <div class="col-lg-2 col-md-6 ms-auto">
+                <h5 class="text-white mb-3">Support</h5>
+                <ul class="list-unstyled text-white">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Services</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h5 class="text-white mb-3">Product</h5>
+                <ul class="list-unstyled text-white">
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Customer</a></li>
+                    <li><a href="#">Product</a></li>
+                </ul>
+            </div>
+            
+        </div>
+    </div>
+    <div class="container my-0 py-0">
+        <small class="small text-light mb-0">&copy; 2024 Cardio Bot. All rights reserved </small>
+    </div>
+</footer>
+
+
+    
+{% endblock content %}
