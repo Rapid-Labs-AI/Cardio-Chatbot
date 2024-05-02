@@ -5,4 +5,5 @@ def home(request):
 
 
 def chatbot(request):
+    request.status
     return render(request, 'cardiobot.html')
