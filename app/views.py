@@ -16,7 +16,7 @@ def chatbot(request):
     CHROMA_PATH = "chroma"
     DATA_PATH = r"C:\Users\AP\Desktop\CardioBot_1\DATA"
 
-    API_KEY = os.getenv('OPENAI_API_KEY', 'fallback-api-key-if-none-found')
+    API_KEY = os.getenv('OPENAI_API_KEY')
 
 
     def main():
@@ -55,7 +55,7 @@ def chatbot(request):
 
         # Create a new DB from the documents.
         embeddings = OpenAIEmbeddings(openai_api_key=API_KEY)
-        db = Chroma.from_documents(embeddings, persist_directory=CHROMA_PATH)
+        db = Chroma.from_documents(chunks, embeddings, persist_directory=CHROMA_PATH)
         db.persist()
         print(f"Saved {len(chunks)} chunks to {CHROMA_PATH}.")
 
