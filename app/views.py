@@ -34,10 +34,12 @@ def chatbot(request):
         """Prompt the user for a question and return it."""
         return input("Hello! Do you have any query related to Cardiac health? ")
 
+
     def main():
         while True:
             query_text = get_user_question().lower()  
-            if query_text == "quit":
+            if query_text == "clear":                
+                os.system(query_text)
                 print("Thank you for using our service. Have a great day!")
                 break
 
