@@ -11,12 +11,12 @@ def home(request):
     return render(request, 'home.html')
 
 
-def chatbot(request):
+def chatbot():
     request.status
     CHROMA_PATH = "chroma"
     DATA_PATH = r"C:\Users\AP\Desktop\CardioBot_1\DATA"
 
-    API_KEY = os.getenv('OPENAI_API_KEY')
+    API_KEY = os.getenv('OPENAI_API_KEY', 'fallback-api-key-if-none-found')
 
 
     def main():
@@ -25,7 +25,7 @@ def chatbot(request):
     def generate_data_store():
         documents = load_documents()
         chunks = split_text(documents)
-        save_to_chroma(chunks)
+  
 
     def load_documents():
         loader = DirectoryLoader(DATA_PATH, glob="*.md")
@@ -50,8 +50,7 @@ def chatbot(request):
 
     def save_to_chroma(chunks: list[Document]):
         # Clear out the database first.
-        if os.path.exists(CHROMA_PATH):
-            shutil.rmtree(CHROMA_PATH)
+        
 
         # Create a new DB from the documents.
         embeddings = OpenAIEmbeddings(openai_api_key=API_KEY)
