@@ -4,7 +4,8 @@ from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 import os
-import pickle 
+import fickling
+
 api_key = os.environ.get["OPENAI_API_KEY"]
 DATA_PATH = 'data/'
 DB_FAISS_PATH = 'vectorstore/db_faiss'
@@ -21,7 +22,7 @@ def create_vector_db():
     embeddings = OpenAIEmbeddings(model='text-embedding-ada-002', api_key=api_key)
     db = FAISS.from_documents(texts, embeddings)
     db.save_local(DB_FAISS_PATH)
-    data = pickle.load('data/index.pkl')
+    data = fickling.load('data/index.pkl')
     return data
 if __name__ == "__main__":
     data = create_vector_db()
