@@ -58,14 +58,14 @@ def chatbot(request):
 
     # SQL Injection vulnerability
     cursor = connection.cursor()
-    query = "SELECT Answer FROM chat_answers WHERE Answer LIKE '%" + user_input + "%'"
-    cursor.execute(query)
+    query = "SELECT Answer FROM chat_answers WHERE Answer LIKE ?"
+    cursor.execute(query, ('%{0}%'.format(user_input), ))
     rows = cursor.fetchall()
 
     response = ai_chatbot.ask(user_input)
 
-    store_query = f"INSERT INTO chat_answers (Answer) VALUES ('{response}')"
-    cursor.execute(store_query) 
+    store_query = "INSERT INTO chat_answers (Answer) VALUES (?)"
+    cursor.execute(store_query, (response, )) 
     connection.commit()
 
     return HttpResponse(f"Database Answers: {rows}, AI Response: {response}")
