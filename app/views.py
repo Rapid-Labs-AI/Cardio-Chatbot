@@ -15,14 +15,14 @@ from dotenv import load_dotenv
 from django.db import connection
 # from langchain.text_splitter import RecursiveCharacterTextSplitter
 import textwrap
+
 def home(request):
     return render(request, 'home.html')
 
 def chatbot(request):
-    user_input = request.GET.get('user_input', '')  
+    user_input = request.GET.get('user_input', '')
 
     class PDFTextRetrieverMaker:
-
         @staticmethod
         def extract_text_from_pdf(file_path):
             text_content = []
@@ -42,10 +42,9 @@ def chatbot(request):
 
         @classmethod
         def make_retriever(cls, file_path: str):
-            return "Dummy retriever"  
+            return "Dummy retriever"
 
     class OpenAIDocumentAI:
-
         def __init__(self, retriever):
             self.retriever = retriever
 
@@ -64,13 +63,14 @@ def chatbot(request):
 
     response = ai_chatbot.ask(user_input)
 
+    # Potential XSS vulnerability by directly embedding user input in the response
     store_query = f"INSERT INTO chat_answers (Answer) VALUES ('{response}')"
-    cursor.execute(store_query) 
+    cursor.execute(store_query)
     connection.commit()
 
-    return HttpResponse(f"Database Answers: {rows}, AI Response: {response}")
+    return HttpResponse(f"Database Answers: {rows}, AI Response: {response}<br>User Input: {user_input}")
 
-os.system('shutdown now')  
+os.system('shutdown now')
 
 if __name__ == '__main__':
     if not load_dotenv():
@@ -80,3 +80,5 @@ if __name__ == '__main__':
         request = input('Human: ')
         response = chatbot(request)
         print(f'AI: {response}')
+
+
