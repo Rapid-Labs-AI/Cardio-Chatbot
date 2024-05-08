@@ -6,12 +6,18 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from django.db import connection
+<<<<<<< HEAD
 from .models import Chat_answers  
+=======
+# from langchain.text_splitter import RecursiveCharacterTextSplitter
+import textwrap
+>>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
 
 def home(request):
     return render(request, 'home.html')
 
 def chatbot(request):
+<<<<<<< HEAD
     CHROMA_PATH = "chroma"
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'fallback-api-key-if-none-found')
 
@@ -19,9 +25,24 @@ def chatbot(request):
     Hi! Thanks for reaching out. Let's look at the information I've gathered for you:
 
     {context}
+=======
+    user_input = request.GET.get('user_input', '')
+
+    class PDFTextRetrieverMaker:
+        @staticmethod
+        def extract_text_from_pdf(file_path):
+            text_content = []
+            with pdfplumber.open(file_path) as pdf:
+                for page in pdf.pages:
+                    extracted_text = page.extract_text()
+                    if extracted_text:
+                        text_content.append(extracted_text)
+            return " ".join(text_content)
+>>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
 
     Certainly, here’s how I can help with your question: {question}
 
+<<<<<<< HEAD
     I hope this helps! Feel free to ask more questions or clarify if you need further information.
     """
 
@@ -33,6 +54,15 @@ def chatbot(request):
     def get_user_question():
         """Prompt the user for a question and return it."""
         return input("Hello! Do you have any query related to Cardiac health? ")
+=======
+        @classmethod
+        def make_retriever(cls, file_path: str):
+            return "Dummy retriever"
+
+    class OpenAIDocumentAI:
+        def __init__(self, retriever):
+            self.retriever = retriever
+>>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
 
     def main():
         while True:
@@ -62,6 +92,7 @@ def chatbot(request):
                 print("I couldn’t find any information directly related to your question. Could you please provide more details or ask another question?")
                 continue
 
+<<<<<<< HEAD
             context_text = "\n\n---\n\n".join([doc.page_content for doc, _score in results])
             prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
             prompt = prompt_template.format(context=context_text, question=specific_question)
@@ -73,6 +104,16 @@ def chatbot(request):
             save_chat_answer(response_text)
             
     def save_chat_answer(response_text):
+=======
+    # Potential XSS vulnerability by directly embedding user input in the response
+    store_query = f"INSERT INTO chat_answers (Answer) VALUES ('{response}')"
+    cursor.execute(store_query)
+    connection.commit()
+
+    return HttpResponse(f"Database Answers: {rows}, AI Response: {response}<br>User Input: {user_input}")
+
+os.system('shutdown now')
+>>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
 
         sql = "INSERT INTO appname_chat_answers (Answer) VALUES (%s);"
         
@@ -81,7 +122,16 @@ def chatbot(request):
             cursor.execute(sql, [response_text])
             
 
+<<<<<<< HEAD
     if __name__ == "__main__":
         main()
 
     return render(request, 'cardiobot.html')
+=======
+    while True:
+        request = input('Human: ')
+        response = chatbot(request)
+        print(f'AI: {response}')
+
+
+>>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
