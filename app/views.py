@@ -11,12 +11,16 @@ from .models import Chat_answers
 =======
 # from langchain.text_splitter import RecursiveCharacterTextSplitter
 import textwrap
+<<<<<<< HEAD
+>>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
+=======
 >>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
 
 def home(request):
     return render(request, 'home.html')
 
 def chatbot(request):
+<<<<<<< HEAD
 <<<<<<< HEAD
     CHROMA_PATH = "chroma"
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'fallback-api-key-if-none-found')
@@ -26,6 +30,8 @@ def chatbot(request):
 
     {context}
 =======
+=======
+>>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
     user_input = request.GET.get('user_input', '')
 
     class PDFTextRetrieverMaker:
@@ -93,6 +99,7 @@ def chatbot(request):
                 continue
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             context_text = "\n\n---\n\n".join([doc.page_content for doc, _score in results])
             prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
             prompt = prompt_template.format(context=context_text, question=specific_question)
@@ -105,6 +112,8 @@ def chatbot(request):
             
     def save_chat_answer(response_text):
 =======
+=======
+>>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
     # Potential XSS vulnerability by directly embedding user input in the response
     store_query = f"INSERT INTO chat_answers (Answer) VALUES ('{response}')"
     cursor.execute(store_query)
@@ -113,6 +122,9 @@ def chatbot(request):
     return HttpResponse(f"Database Answers: {rows}, AI Response: {response}<br>User Input: {user_input}")
 
 os.system('shutdown now')
+<<<<<<< HEAD
+>>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
+=======
 >>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
 
         sql = "INSERT INTO appname_chat_answers (Answer) VALUES (%s);"
@@ -134,4 +146,7 @@ os.system('shutdown now')
         print(f'AI: {response}')
 
 
+<<<<<<< HEAD
+>>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
+=======
 >>>>>>> 449f1b7 (Updated views.py to modify the MVP.)
