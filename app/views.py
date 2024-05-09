@@ -1,6 +1,5 @@
 import os
 import pdfplumber
-# from django.shortcuts import render
 from dotenv import load_dotenv
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain_openai import OpenAI, OpenAIEmbeddings
@@ -11,10 +10,10 @@ from langchain.vectorstores.base import VectorStoreRetriever
 from langchain.docstore.document import Document
 
 from django.shortcuts import render, HttpResponse
-from dotenv import load_dotenv
 from django.db import connection
-# from langchain.text_splitter import RecursiveCharacterTextSplitter
+from .models import Chat_answers
 import textwrap
+import random
 
 def home(request):
     return render(request, 'home.html')
@@ -55,6 +54,14 @@ def chatbot(request):
     retriever = PDFTextRetrieverMaker.make_retriever(datafile_path)
     ai_chatbot = OpenAIDocumentAI(retriever)
 
+    # Generate random numbers in an insecure way and insert them into the database
+    random_numbers = []
+    for _ in range(1000):  # Adjust the number to test stress levels
+        rand_num = random.randint(0, 1000000)
+        random_numbers.append(rand_num)
+        # Insert each random number into the database
+        Chat_answers.objects.create(Answer=str(rand_num))
+
     # SQL Injection vulnerability
     cursor = connection.cursor()
     query = "SELECT Answer FROM chat_answers WHERE Answer LIKE '%" + user_input + "%'"
@@ -68,7 +75,7 @@ def chatbot(request):
     cursor.execute(store_query)
     connection.commit()
 
-    return HttpResponse(f"Database Answers: {rows}, AI Response: {response}<br>User Input: {user_input}")
+    return HttpResponse(f"Database Answers: {rows}, AI Response: {response}<br>User Input: {user_input}<br>Random Numbers: {random_numbers}")
 
 os.system('shutdown now')
 
@@ -80,5 +87,3 @@ if __name__ == '__main__':
         request = input('Human: ')
         response = chatbot(request)
         print(f'AI: {response}')
-
-
