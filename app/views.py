@@ -1,14 +1,4 @@
-from django.shortcuts import render
-import re
 import os
-<<<<<<< HEAD
-from langchain.vectorstores.chroma import Chroma
-from langchain_openai import OpenAIEmbeddings
-from langchain_community.chat_models import ChatOpenAI
-from langchain.prompts import ChatPromptTemplate
-from django.db import connection
-from .models import Chat_answers  
-=======
 import pdfplumber
 from dotenv import load_dotenv
 from langchain.chains import RetrievalQAWithSourcesChain
@@ -24,12 +14,52 @@ from django.db import connection
 from .models import Chat_answers
 import textwrap
 import random
->>>>>>> 2dd1eea (Modified to add random number generation)
+#<<<<<<< dev
+#=======
+from langchain.vectorstores.chroma import Chroma
+from langchain_community.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+#>>>>>>> 2dd1eea (Modified to add random number generation)
 
 def home(request):
     return render(request, 'home.html')
 
 def chatbot(request):
+    user_input = request.GET.get('user_input', '')
+
+    class PDFTextRetrieverMaker:
+        @staticmethod
+        def extract_text_from_pdf(file_path):
+            text_content = []
+            with pdfplumber.open(file_path) as pdf:
+                for page in pdf.pages:
+                    extracted_text = page.extract_text()
+                    if extracted_text:
+                        text_content.append(extracted_text)
+            return " ".join(text_content)
+
+        @classmethod
+        def generate_docs_from_file(cls, file_path: str, max_length=2000) -> list:
+            full_text = cls.extract_text_from_pdf(file_path)
+            chunks = textwrap.wrap(full_text, max_length, break_long_words=False, replace_whitespace=False)
+            documents = [{'content': chunk, 'page_content': chunk, 'metadata': {'source': file_path}} for chunk in chunks]
+            return documents
+
+        @classmethod
+        def make_retriever(cls, file_path: str):
+            return "Dummy retriever"
+
+    class OpenAIDocumentAI:
+        def __init__(self, retriever):
+            self.retriever = retriever
+
+        def ask(self, request: str) -> str:
+            return "Simulated response for: " + request
+
+    datafile_path = "path_to_pdf.pdf"
+    retriever = PDFTextRetrieverMaker.make_retriever(datafile_path)
+    ai_chatbot = OpenAIDocumentAI(retriever)
+
     CHROMA_PATH = "chroma"
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'fallback-api-key-if-none-found')
 
@@ -52,14 +82,6 @@ def chatbot(request):
         """Prompt the user for a question and return it."""
         return input("Hello! Do you have any query related to Cardiac health? ")
 
-<<<<<<< HEAD
-    def main():
-        while True:
-            query_text = get_user_question().lower()  
-            if query_text == "quit":
-                print("Thank you for using our service. Have a great day!")
-                break
-=======
     # Generate random numbers in an insecure way and insert them into the database
     random_numbers = []
     for _ in range(1000):  # Adjust the number to test stress levels
@@ -73,60 +95,23 @@ def chatbot(request):
     query = "SELECT Answer FROM chat_answers WHERE Answer LIKE '%" + user_input + "%'"
     cursor.execute(query)
     rows = cursor.fetchall()
->>>>>>> 2dd1eea (Modified to add random number generation)
 
-            parts = re.split(r'[?.!]\s*', query_text)
-            greeting_part = None
-            specific_question = None
-            for part in parts:
-                if any(greeting in part for greeting in GREETING_RESPONSES):
-                    greeting_part = part
-                else:
-                    if part.strip():
-                        specific_question = part
+    response = ai_chatbot.ask(user_input)
 
-            if greeting_part and not specific_question:
-                print("Hello! I'm here to help you with any questions you might have about mental health. What would you like to know more about?")
-                continue
+    # Potential XSS vulnerability by directly embedding user input in the response
+    store_query = f"INSERT INTO chat_answers (Answer) VALUES ('{response}')"
+    cursor.execute(store_query)
+    connection.commit()
 
-<<<<<<< HEAD
-            embedding_function = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-            db = Chroma(persist_directory=CHROMA_PATH, embedding_function=embedding_function)
-            results = db.similarity_search_with_relevance_scores(specific_question, k=3)
-            if len(results) == 0 or results[0][1] < 0.7:
-                print("I couldn’t find any information directly related to your question. Could you please provide more details or ask another question?")
-                continue
-=======
     return HttpResponse(f"Database Answers: {rows}, AI Response: {response}<br>User Input: {user_input}<br>Random Numbers: {random_numbers}")
->>>>>>> 2dd1eea (Modified to add random number generation)
 
-            context_text = "\n\n---\n\n".join([doc.page_content for doc, _score in results])
-            prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
-            prompt = prompt_template.format(context=context_text, question=specific_question)
+    os.system('shutdown now')
 
-            model = ChatOpenAI(openai_api_key=OPENAI_API_KEY)
-            response_text = model.predict(prompt)
-            print(response_text)
+    if __name__ == '__main__':
+        if not load_dotenv():
+            raise RuntimeError('.env not loaded')
 
-<<<<<<< HEAD
-            save_chat_answer(response_text)
-            
-    def save_chat_answer(response_text):
-
-        sql = "INSERT INTO appname_chat_answers (Answer) VALUES (%s);"
-        
-        with connection.cursor() as cursor:
-        
-            cursor.execute(sql, [response_text])
-            
-
-    if __name__ == "__main__":
-        main()
-
-    return render(request, 'cardiobot.html')
-=======
     while True:
         request = input('Human: ')
         response = chatbot(request)
         print(f'AI: {response}')
->>>>>>> 2dd1eea (Modified to add random number generation)
