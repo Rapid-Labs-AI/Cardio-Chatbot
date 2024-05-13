@@ -14,12 +14,9 @@ from django.db import connection
 from .models import Chat_answers
 import textwrap
 import random
-#<<<<<<< dev
-#=======
 from langchain.vectorstores.chroma import Chroma
 from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
-#>>>>>>> 2dd1eea (Modified to add random number generation)
 
 def home(request):
     return render(request, 'home.html')
