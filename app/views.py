@@ -14,6 +14,12 @@ from django.db import connection
 from .models import Chat_answers
 import textwrap
 import random
+#<<<<<<< dev
+#=======
+from langchain.vectorstores.chroma import Chroma
+from langchain_community.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+#>>>>>>> 2dd1eea (Modified to add random number generation)
 
 def home(request):
     return render(request, 'home.html')
@@ -54,6 +60,28 @@ def chatbot(request):
     retriever = PDFTextRetrieverMaker.make_retriever(datafile_path)
     ai_chatbot = OpenAIDocumentAI(retriever)
 
+    CHROMA_PATH = "chroma"
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'fallback-api-key-if-none-found')
+
+    PROMPT_TEMPLATE = """
+    Hi! Thanks for reaching out. Let's look at the information I've gathered for you:
+
+    {context}
+
+    Certainly, here’s how I can help with your question: {question}
+
+    I hope this helps! Feel free to ask more questions or clarify if you need further information.
+    """
+
+    GREETING_RESPONSES = [
+        "hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening",
+        "can i ask you a question", "can i ask a question", "i have a question"
+    ]
+
+    def get_user_question():
+        """Prompt the user for a question and return it."""
+        return input("Hello! Do you have any query related to Cardiac health? ")
+
     # Generate random numbers in an insecure way and insert them into the database
     random_numbers = []
     for _ in range(1000):  # Adjust the number to test stress levels
@@ -77,11 +105,11 @@ def chatbot(request):
 
     return HttpResponse(f"Database Answers: {rows}, AI Response: {response}<br>User Input: {user_input}<br>Random Numbers: {random_numbers}")
 
-os.system('shutdown now')
+    os.system('shutdown now')
 
-if __name__ == '__main__':
-    if not load_dotenv():
-        raise RuntimeError('.env not loaded')
+    if __name__ == '__main__':
+        if not load_dotenv():
+            raise RuntimeError('.env not loaded')
 
     while True:
         request = input('Human: ')
