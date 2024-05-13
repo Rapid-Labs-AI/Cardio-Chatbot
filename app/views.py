@@ -42,25 +42,19 @@ def chatbot(request):
         @classmethod
         def make_retriever(cls, file_path: str):
             return "Dummy retriever"
+        
+        
+        def generate_random():
+            return random.randint(1, 64)
 
     class OpenAIDocumentAI:
         def __init__(self, retriever):
             self.retriever = retriever
 
-        def ask(self, request: str) -> str:
-            return "Simulated response for: " + request
-
     datafile_path = "path_to_pdf.pdf"
     retriever = PDFTextRetrieverMaker.make_retriever(datafile_path)
     ai_chatbot = OpenAIDocumentAI(retriever)
 
-    # Generate random numbers in an insecure way and insert them into the database
-    random_numbers = []
-    for _ in range(1000):  # Adjust the number to test stress levels
-        rand_num = random.randint(0, 1000000)
-        random_numbers.append(rand_num)
-        # Insert each random number into the database
-        Chat_answers.objects.create(Answer=str(rand_num))
 
     # SQL Injection vulnerability
     cursor = connection.cursor()
@@ -74,8 +68,12 @@ def chatbot(request):
     store_query = f"INSERT INTO chat_answers (Answer) VALUES ('{response}')"
     cursor.execute(store_query)
     connection.commit()
+    def ask(self, request: str) -> str:
+        return "Simulated response for: " + request
+    
+    
 
-    return HttpResponse(f"Database Answers: {rows}, AI Response: {response}<br>User Input: {user_input}<br>Random Numbers: {random_numbers}")
+    return HttpResponse(f"Database Answers: {rows}, AI Response: {response}<br>", ask())
 
 os.system('shutdown now')
 
