@@ -35,20 +35,20 @@ def chatbot(request):
         text_content = [page.extract_text() for page in pdf.pages]
 
     class PDFTextRetrieverMaker:
-        @staticmethod
-        def extract_text_from_pdf(file_path):
-            text_content = []
-            with pdfplumber.open(file_path) as pdf:
-                for page in pdf.pages:
-                    extracted_text = page.extract_text()
-                    if extracted_text:
-                        text_content.append(extracted_text)
-            return " ".join(text_content)
+        # @staticmethod
+        # def extract_text_from_pdf(file_path):
+        #     text_content = []
+        #     with pdfplumber.open(file_path) as pdf:
+        #         for page in pdf.pages:
+        #             extracted_text = page.extract_text()
+        #             if extracted_text:
+        #                 text_content.append(extracted_text)
+        #     return " ".join(text_content)
 
         @classmethod
         def generate_docs_from_file(cls, file_path: str, max_length=2000) -> list:
             full_text = cls.extract_text_from_pdf(file_path)
-            chunks = textwrap.wrap(full_text, max_length, break_long_words=False, replace_whitespace=False)
+            chunks = textwrap.wrap(text_content, max_length, break_long_words=False, replace_whitespace=False)
             documents = [{'content': chunk, 'page_content': chunk, 'metadata': {'source': file_path}} for chunk in chunks]
             return documents
 
