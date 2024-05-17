@@ -27,12 +27,7 @@ def home(request):
 def chatbot(request):
     user_input = request.GET.get('user_input', '')
     
-    
-    # Hardcoded file path
-    datafile_path = "pdf1.pdf"
 
-    with pdfplumber.open(datafile_path) as pdf:
-        text_content = [page.extract_text() for page in pdf.pages]
 
     class PDFTextRetrieverMaker:
         @staticmethod
@@ -48,7 +43,7 @@ def chatbot(request):
         @classmethod
         def generate_docs_from_file(cls, file_path: str, max_length=2000) -> list:
             full_text = cls.extract_text_from_pdf(file_path)
-            chunks = textwrap.wrap(text_content, max_length, break_long_words=False, replace_whitespace=False)
+            chunks = textwrap.wrap(full_text, max_length, break_long_words=False, replace_whitespace=False)
             documents = [{'content': chunk, 'page_content': chunk, 'metadata': {'source': file_path}} for chunk in chunks]
             return documents
 
@@ -96,17 +91,9 @@ def chatbot(request):
         # Insert each random number into the database
         Chat_answers.objects.create(Answer=str(rand_num))
 
-    # SQL Injection vulnerability
-    cursor = connection.cursor()
-    query = "SELECT Answer FROM chat_answers WHERE Answer LIKE '%" + user_input + "%'"
-    cursor.execute(query)
-    rows = cursor.fetchall()
 
     response = ai_chatbot.ask(user_input)
 
-    store_query = f"INSERT INTO chat_answers (Answer) VALUES ('{response}')"
-    cursor.execute(store_query)
-    connection.commit()
 
     return HttpResponse(f"Database Answers: {rows}, AI Response: {response}<br>User Input: {user_input}<br>Random Numbers: {random_numbers}")
 
