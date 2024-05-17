@@ -35,15 +35,15 @@ def chatbot(request):
         text_content = [page.extract_text() for page in pdf.pages]
 
     class PDFTextRetrieverMaker:
-        # @staticmethod
-        # def extract_text_from_pdf(file_path):
-        #     text_content = []
-        #     with pdfplumber.open(file_path) as pdf:
-        #         for page in pdf.pages:
-        #             extracted_text = page.extract_text()
-        #             if extracted_text:
-        #                 text_content.append(extracted_text)
-        #     return " ".join(text_content)
+        @staticmethod
+        def extract_text_from_pdf(file_path):
+            text_content = []
+            with pdfplumber.open(file_path) as pdf:
+                for page in pdf.pages:
+                    extracted_text = page.extract_text()
+                    if extracted_text:
+                        text_content.append(extracted_text)
+            return " ".join(text_content)
 
         @classmethod
         def generate_docs_from_file(cls, file_path: str, max_length=2000) -> list:
@@ -89,7 +89,6 @@ def chatbot(request):
         """Prompt the user for a question and return it."""
         return input("Hello! Do you have any query related to Cardiac health? ")
 
-    # Generate random numbers in an insecure way and insert them into the database
     random_numbers = []
     for _ in range(1000):  # Adjust the number to test stress levels
         rand_num = random.randint(0, 1000000)
@@ -105,20 +104,19 @@ def chatbot(request):
 
     response = ai_chatbot.ask(user_input)
 
-    # Potential XSS vulnerability by directly embedding user input in the response
     store_query = f"INSERT INTO chat_answers (Answer) VALUES ('{response}')"
     cursor.execute(store_query)
     connection.commit()
 
     return HttpResponse(f"Database Answers: {rows}, AI Response: {response}<br>User Input: {user_input}<br>Random Numbers: {random_numbers}")
 
-    os.system('shutdown now')
+if __name__ == '__main__':
+    if not load_dotenv():
+        raise RuntimeError('.env not loaded')
 
-    if __name__ == '__main__':
-        if not load_dotenv():
-            raise RuntimeError('.env not loaded')
-
-    while True:
-        request = input('Human: ')
-        response = chatbot(request)
-        print(f'AI: {response}')
+while True:
+    request = input('Human: ')
+    response = chatbot(request)
+    print(f'AI: {response}')
+    
+break
