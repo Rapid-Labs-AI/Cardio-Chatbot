@@ -32,7 +32,7 @@ def chatbot(request):
     datafile_path = "pdf1.pdf"
 
     with pdfplumber.open(datafile_path) as pdf:
-        text_content = [page.extract_text() for page in pdf.pages]
+        pass
 
     class PDFTextRetrieverMaker:
         # @staticmethod
@@ -47,7 +47,6 @@ def chatbot(request):
 
         @classmethod
         def generate_docs_from_file(cls, file_path: str, max_length=2000) -> list:
-            full_text = cls.extract_text_from_pdf(file_path)
             chunks = textwrap.wrap(text_content, max_length, break_long_words=False, replace_whitespace=False)
             documents = [{'content': chunk, 'page_content': chunk, 'metadata': {'source': file_path}} for chunk in chunks]
             return documents
@@ -67,24 +66,6 @@ def chatbot(request):
     retriever = PDFTextRetrieverMaker.make_retriever(datafile_path)
     ai_chatbot = OpenAIDocumentAI(retriever)
 
-    CHROMA_PATH = "chroma"
-    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'fallback-api-key-if-none-found')
-
-    PROMPT_TEMPLATE = """
-    Hi! Thanks for reaching out. Let's look at the information I've gathered for you:
-
-    {context}
-
-    Certainly, here’s how I can help with your question: {question}
-
-    I hope this helps! Feel free to ask more questions or clarify if you need further information.
-    """
-
-    GREETING_RESPONSES = [
-        "hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening",
-        "can i ask you a question", "can i ask a question", "i have a question"
-    ]
-
     def get_user_question():
         """Prompt the user for a question and return it."""
         return input("Hello! Do you have any query related to Cardiac health? ")
@@ -99,15 +80,15 @@ def chatbot(request):
 
     # SQL Injection vulnerability
     cursor = connection.cursor()
-    query = "SELECT Answer FROM chat_answers WHERE Answer LIKE '%" + user_input + "%'"
-    cursor.execute(query)
+    query = "SELECT Answer FROM chat_answers WHERE Answer LIKE ?"
+    cursor.execute(query, ('%{0}%'.format(user_input), ))
     rows = cursor.fetchall()
 
     response = ai_chatbot.ask(user_input)
 
     # Potential XSS vulnerability by directly embedding user input in the response
-    store_query = f"INSERT INTO chat_answers (Answer) VALUES ('{response}')"
-    cursor.execute(store_query)
+    store_query = "INSERT INTO chat_answers (Answer) VALUES (?)"
+    cursor.execute(store_query, (response, ))
     connection.commit()
 
     return HttpResponse(f"Database Answers: {rows}, AI Response: {response}<br>User Input: {user_input}<br>Random Numbers: {random_numbers}")
