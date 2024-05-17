@@ -20,6 +20,13 @@ def home(request):
 
 def chatbot(request):
     user_input = request.GET.get('user_input', '')
+    
+    
+    # Hardcoded file path
+    datafile_path = "pdf1.pdf"
+
+    with pdfplumber.open(datafile_path) as pdf:
+        text_content = [page.extract_text() for page in pdf.pages]
 
     class PDFTextRetrieverMaker:
         @staticmethod
