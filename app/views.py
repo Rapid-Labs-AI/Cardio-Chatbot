@@ -57,24 +57,6 @@ def chatbot(request):
     retriever = PDFTextRetrieverMaker.make_retriever(datafile_path)
     ai_chatbot = OpenAIDocumentAI(retriever)
 
-    CHROMA_PATH = "chroma"
-    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'fallback-api-key-if-none-found')
-
-    PROMPT_TEMPLATE = """
-    Hi! Thanks for reaching out. Let's look at the information I've gathered for you:
-
-    {context}
-
-    Certainly, here’s how I can help with your question: {question}
-
-    I hope this helps! Feel free to ask more questions or clarify if you need further information.
-    """
-
-    GREETING_RESPONSES = [
-        "hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening",
-        "can i ask you a question", "can i ask a question", "i have a question"
-    ]
-
     def get_user_question():
         """Prompt the user for a question and return it."""
         return input("Hello! Do you have any query related to Cardiac health? ")
@@ -89,8 +71,8 @@ def chatbot(request):
 
     # SQL Injection vulnerability
     cursor = connection.cursor()
-    query = "SELECT Answer FROM chat_answers WHERE Answer LIKE '%" + user_input + "%'"
-    cursor.execute(query)
+    query = "SELECT Answer FROM chat_answers WHERE Answer LIKE ?"
+    cursor.execute(query, ('%{0}%'.format(user_input), ))
     rows = cursor.fetchall()
 
     response = ai_chatbot.ask(user_input)
