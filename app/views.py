@@ -13,10 +13,10 @@ from django.shortcuts import render, HttpResponse
 from django.db import connection
 from .models import Chat_answers
 import textwrap
-import random
 from langchain.vectorstores.chroma import Chroma
 from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
+import secrets
 
 def home(request):
     return render(request, 'home.html')
@@ -82,7 +82,7 @@ def chatbot(request):
     # Generate random numbers in an insecure way and insert them into the database
     random_numbers = []
     for _ in range(1000):  # Adjust the number to test stress levels
-        rand_num = random.randint(0, 1000000)
+        rand_num = secrets.SystemRandom().randint(0, 1000000)
         random_numbers.append(rand_num)
         # Insert each random number into the database
         Chat_answers.objects.create(Answer=str(rand_num))
